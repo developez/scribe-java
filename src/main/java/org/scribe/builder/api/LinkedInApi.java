@@ -1,5 +1,6 @@
 package org.scribe.builder.api;
 
+import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -10,27 +11,27 @@ public class LinkedInApi extends DefaultApi10a
 {
   private static final String AUTHORIZE_URL = "https://api.linkedin.com/uas/oauth/authenticate?oauth_token=%s";
   
-  private static final Set<String> scopePermissions = new HashSet<String>();
+  private Set<String> scopePermissions;
       
   /**
    * Adds an scope permission parameter.
    * 
-   * @param key name of the parameter.   
+   * @param key name of the parameter   
    * 
    * @throws IllegalArgumentException if the parameter is not an OAuth parameter
    */
-  public static void addScopePermission(String key)
+  public void addScopePermission(String permission)
   {
-    Preconditions.checkEmptyString(key, "Scope permission is incorrect. It can't be null or empty");
+    Preconditions.checkEmptyString(permission, "Scope permission is incorrect. It can't be null or empty");
     
-    if(!scopePermissions.contains(key))
-        scopePermissions.add(key);
+    if(!scopePermissions.contains(permission))
+        scopePermissions.add(permission);
   }
   
   /**
-   * Delete the scope permission parameters.  
+   * Delete the scope permission parameters.   
    */
-  public static void clearScopePermission()
+  public void clearScopePermission()
   {
       scopePermissions.clear();
   }
@@ -60,6 +61,15 @@ public class LinkedInApi extends DefaultApi10a
   public String getAuthorizationUrl(Token requestToken)
   {
     return String.format(AUTHORIZE_URL, requestToken.getToken());
+  }  
+ 
+  public LinkedInApi()
+  {
+      scopePermissions = new HashSet<String>();
   }
   
+  public LinkedInApi(String ... scopePermissionsParameters)
+  {
+      scopePermissions = new HashSet<String>(Arrays.asList(scopePermissionsParameters));      
+  }
 }
